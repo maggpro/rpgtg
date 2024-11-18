@@ -3,21 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPG Game</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="styles/main.css">
+    <title>RPG Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        .test-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <div id="game-container">
-        <canvas id="gameCanvas"></canvas>
-        <div id="controls"></div>
-    </div>
+    <h1 style="color: red;">Тестовая страница RPG</h1>
 
-    <script src="js/character/Player.js"></script>
-    <script src="js/world/WorldMap.js"></script>
-    <script src="js/world/Room.js"></script>
-    <script src="js/combat/CombatSystem.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/telegram.js"></script>
+    <p>Если вы видите этот текст, значит страница загрузилась!</p>
+
+    <button class="test-button" onclick="alert('Кнопка работает!')">
+        Нажми меня
+    </button>
+
+    <script>
+        console.log('Страница загружена');
+
+        // Проверяем Telegram
+        if (window.Telegram && window.Telegram.WebApp) {
+            document.body.innerHTML += '<p>Telegram WebApp обнаружен!</p>';
+        } else {
+            document.body.innerHTML += '<p>Telegram WebApp НЕ обнаружен</p>';
+        }
+    </script>
 </body>
 </html>
