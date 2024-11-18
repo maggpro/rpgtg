@@ -3,42 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPG Test</title>
+    <title>RPG Game</title>
     <style>
         body {
             margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            background: #f0f0f0;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
         }
-        .test-button {
-            padding: 10px 20px;
-            font-size: 18px;
-            background: #4CAF50;
+        #gameCanvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            background: #333;
+        }
+        #debug {
+            position: fixed;
+            top: 10px;
+            left: 10px;
             color: white;
+            font-family: monospace;
+            z-index: 1000;
+        }
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
-    <h1 style="color: red;">Тестовая страница RPG</h1>
-
-    <p>Если вы видите этот текст, значит страница загрузилась!</p>
-
-    <button class="test-button" onclick="alert('Кнопка работает!')">
-        Нажми меня
-    </button>
+    <div id="debug">Loading...</div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="controls">
+        <button class="control-btn" id="moveLeft">←</button>
+        <button class="control-btn" id="moveRight">→</button>
+    </div>
 
     <script>
-        console.log('Страница загружена');
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const debug = document.getElementById('debug');
 
-        // Проверяем Telegram
+        // Игровые переменные
+        let player = {
+            x: 100,
+            y: 100,
+            size: 40,
+            speed: 5
+        };
+
+        // Установка размеров canvas
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            debug.textContent = `Canvas: ${canvas.width}x${canvas.height}`;
+        }
+
+        // Обработка управления
+        document.getElementById('moveLeft').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            player.x -= player.speed;
+        });
+
+        document.getElementById('moveRight').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            player.x += player.speed;
+        });
+
+        // Отрисовка игры
+        function draw() {
+            // Очистка canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Отрисовка игрока
+            ctx.fillStyle = 'red';
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+
+            // Обновление позиции
+            if (player.x < 0) player.x = 0;
+            if (player.x > canvas.width - player.size) player.x = canvas.width - player.size;
+
+            requestAnimationFrame(draw);
+        }
+
+        // Инициализация
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        draw();
+
+        // Проверка Telegram WebApp
         if (window.Telegram && window.Telegram.WebApp) {
-            document.body.innerHTML += '<p>Telegram WebApp обнаружен!</p>';
-        } else {
-            document.body.innerHTML += '<p>Telegram WebApp НЕ обнаружен</p>';
+            debug.textContent += '\nTelegram WebApp Ready';
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
         }
     </script>
 </body>
