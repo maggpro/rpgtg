@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LASORI - Игровое поле</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            padding: 4px;
+            background: #c4a77d;
+            border-radius: 8px;
+            max-width: 95vw;
+            max-height: 95vh;
+            aspect-ratio: 1;
+        }
+
+        .sector {
+            background: #1a1a2e;
+            aspect-ratio: 1;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #c4a77d;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .sector:hover {
+            background: #2a2a4e;
+        }
+
+        .sector.active {
+            background: #3a3a5e;
+            box-shadow: inset 0 0 10px rgba(196, 167, 125, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-grid">
+        <div class="sector" onclick="selectSector(0)">Сектор 1</div>
+        <div class="sector" onclick="selectSector(1)">Сектор 2</div>
+        <div class="sector" onclick="selectSector(2)">Сектор 3</div>
+        <div class="sector" onclick="selectSector(3)">Сектор 4</div>
+        <div class="sector" onclick="selectSector(4)">Сектор 5</div>
+        <div class="sector" onclick="selectSector(5)">Сектор 6</div>
+        <div class="sector" onclick="selectSector(6)">Сектор 7</div>
+        <div class="sector" onclick="selectSector(7)">Сектор 8</div>
+        <div class="sector" onclick="selectSector(8)">Сектор 9</div>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            tg.expand();
+            tg.enableClosingConfirmation();
+            tg.ready();
+        });
+
+        function selectSector(index) {
+            // Убираем активный класс у всех секторов
+            document.querySelectorAll('.sector').forEach(sector => {
+                sector.classList.remove('active');
+            });
+
+            // Добавляем активный класс выбранному сектору
+            document.querySelectorAll('.sector')[index].classList.add('active');
+
+            // Здесь будет логика перехода в выбранный сектор
+            console.log(`Выбран сектор ${index + 1}`);
+        }
+    </script>
+</body>
+</html>

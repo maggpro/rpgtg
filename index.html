@@ -163,6 +163,31 @@
             height: 100%;
             display: block;
         }
+
+        .loading-progress {
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #c4a77d;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(196, 167, 125, 0.2);
+            border-radius: 2px;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #ffd700;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -186,6 +211,13 @@
         <button class="start-button" onclick="startGame()">
             Войти в Lasori
         </button>
+
+        <div class="loading-progress">
+            <div>Загрузка мира Lasori...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
     </div>
 
     <div id="game-container">
@@ -207,6 +239,8 @@
             document.addEventListener('touchmove', function(e) {
                 e.preventDefault();
             }, { passive: false });
+
+            startLoading();
         });
 
         function startGame() {
@@ -256,6 +290,23 @@
             document.documentElement.style.setProperty('--tg-theme-bg-color', tg.backgroundColor);
             document.documentElement.style.setProperty('--tg-theme-text-color', tg.textColor);
         });
+
+        function startLoading() {
+            const progressBar = document.getElementById('progressBar');
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += 2;
+                progressBar.style.width = `${progress}%`;
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        window.location.href = 'game.html';
+                    }, 500);
+                }
+            }, 50);
+        }
     </script>
 </body>
 </html>
