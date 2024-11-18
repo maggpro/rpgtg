@@ -6,49 +6,51 @@
     <title>LASORI - Город Великих Воинов</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Сброс стандартных отступов и прокрутки */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            position: fixed;
-            -webkit-touch-callout: none; /* iOS Safari */
-            -webkit-user-select: none;   /* Chrome/Safari/Opera */
-            -khtml-user-select: none;    /* Konqueror */
-            -moz-user-select: none;      /* Firefox */
-            -ms-user-select: none;       /* Internet Explorer/Edge */
-            user-select: none;           /* Non-prefixed version */
-        }
-
         body {
             background: linear-gradient(135deg, #0f1729 0%, #1a1a2e 100%);
             color: #ffffff;
             font-family: 'Arial', sans-serif;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            overflow: hidden;
         }
 
-        #welcome-screen {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #0f1729 0%, #1a1a2e 100%);
+        .loading-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(196, 167, 125, 0.2);
+            border-radius: 2px;
+            margin: 20px auto;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #ffd700;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .loading-text {
+            color: #c4a77d;
+            font-size: 14px;
+            margin-top: 10px;
         }
 
         .title {
@@ -61,72 +63,24 @@
         }
 
         .subtitle {
-            font-family: 'Cinzel', serif;
             color: #c4a77d;
             font-size: 18px;
             margin-bottom: 30px;
         }
 
         .welcome-text {
-            font-size: 16px;
-            line-height: 1.8;
-            margin-bottom: 30px;
-            color: #e0e0e0;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-
-        .start-button {
-            background: linear-gradient(45deg, #c4a77d 0%, #ffd700 100%);
-            color: #1a1a2e;
-            border: none;
-            padding: 15px 40px;
-            font-size: 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Cinzel', serif;
-            font-weight: bold;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-        }
-
-        .start-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
-        }
-
-        .feature-list {
-            text-align: left;
-            margin: 30px auto;
-            padding: 0;
-            list-style: none;
-        }
-
-        .feature-list li {
-            margin: 15px 0;
-            color: #c4a77d;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            opacity: 0;
-            transform: translateX(-20px);
-            animation: slideIn 0.5s ease forwards;
-        }
-
-        .feature-list li::before {
-            content: "✧";
-            margin-right: 10px;
-            color: #ffd700;
-        }
-
-        .version {
             position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 12px;
-            color: #c4a77d;
+            top: 45%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #e0e0e0;
         }
 
-        /* Анимации */
         @keyframes glow {
             from {
                 text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
@@ -136,176 +90,71 @@
             }
         }
 
-        @keyframes slideIn {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .feature-list li:nth-child(1) { animation-delay: 0.2s; }
-        .feature-list li:nth-child(2) { animation-delay: 0.4s; }
-        .feature-list li:nth-child(3) { animation-delay: 0.6s; }
-        .feature-list li:nth-child(4) { animation-delay: 0.8s; }
-
-        #game-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            z-index: 900;
-        }
-
-        #gameCanvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .loading-progress {
-            position: fixed;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #c4a77d;
-            font-size: 14px;
-        }
-
-        .progress-bar {
-            width: 200px;
-            height: 4px;
-            background: rgba(196, 167, 125, 0.2);
-            border-radius: 2px;
-            margin-top: 10px;
-        }
-
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: #ffd700;
-            border-radius: 2px;
-            transition: width 0.3s ease;
+        .fade-out {
+            opacity: 0;
+            transition: opacity 1s ease;
         }
     </style>
 </head>
 <body>
-    <div id="welcome-screen">
+    <div class="loading-container">
         <h1 class="title">LASORI</h1>
         <div class="subtitle">Город Великих Воинов</div>
-
-        <div class="welcome-text">
-            Добро пожаловать в Lasori – священный город, где обретают покой
-            величайшие воины всех времён. Здесь, за гранью обычного мира,
-            твой путь продолжится среди легенд.
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
         </div>
-
-        <ul class="feature-list">
-            <li>Встреть легендарных воинов прошлого</li>
-            <li>Докажи свою доблесть в священных испытаниях</li>
-            <li>Раскрой тайны древнего города</li>
-            <li>Стань частью вечной легенды</li>
-        </ul>
-
-        <button class="start-button" onclick="startGame()">
-            Войти в Lasori
-        </button>
-
-        <div class="loading-progress">
-            <div>Загрузка мира Lasori...</div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressBar"></div>
-            </div>
-        </div>
+        <div class="loading-text" id="loadingText">Открытие врат Lasori...</div>
     </div>
 
-    <div id="game-container">
-        <canvas id="gameCanvas"></canvas>
+    <div class="welcome-text">
+        Добро пожаловать в Lasori – священный город, где обретают покой
+        величайшие воины всех времён. Здесь, за гранью обычного мира,
+        твой путь продолжится среди легенд.
     </div>
-
-    <div class="version">Alpha 0.1</div>
 
     <script>
-        // Инициализация Telegram WebApp
         let tg = window.Telegram.WebApp;
 
-        // Функция инициализации при загрузке страницы
+        const loadingTexts = [
+            "Открытие врат Lasori...",
+            "Подготовка священных залов...",
+            "Пробуждение древних духов...",
+            "Настройка магических потоков...",
+            "Завершение ритуала входа..."
+        ];
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Расширяем на весь экран
             tg.expand();
-
-            // Отключаем обновление страницы свайпом
-            document.addEventListener('touchmove', function(e) {
-                e.preventDefault();
-            }, { passive: false });
-
             startLoading();
-        });
-
-        function startGame() {
-            const welcomeScreen = document.getElementById('welcome-screen');
-            const gameContainer = document.getElementById('game-container');
-
-            welcomeScreen.style.opacity = '0';
-            welcomeScreen.style.transition = 'opacity 1s ease';
-
-            setTimeout(() => {
-                welcomeScreen.style.display = 'none';
-                gameContainer.style.display = 'block';
-                initGame();
-            }, 1000);
-        }
-
-        function initGame() {
-            const canvas = document.getElementById('gameCanvas');
-            const ctx = canvas.getContext('2d');
-
-            // Устанавливаем размеры canvas равными размеру окна
-            function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-
-            // Вызываем сразу и при изменении размера окна
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-
-            // Начальный экран игры
-            ctx.fillStyle = '#1a1a2e';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#ffd700';
-            ctx.font = '24px Cinzel';
-            ctx.textAlign = 'center';
-            ctx.fillText('Врата Lasori открываются...', canvas.width/2, canvas.height/2);
-
-            // Дополнительные настройки Telegram WebApp
-            tg.enableClosingConfirmation();
-            tg.ready();
-        }
-
-        // Обработка изменения темы Telegram
-        tg.onEvent('themeChanged', function() {
-            document.documentElement.style.setProperty('--tg-theme-bg-color', tg.backgroundColor);
-            document.documentElement.style.setProperty('--tg-theme-text-color', tg.textColor);
         });
 
         function startLoading() {
             const progressBar = document.getElementById('progressBar');
+            const loadingText = document.getElementById('loadingText');
             let progress = 0;
 
             const interval = setInterval(() => {
-                progress += 2;
+                progress += 1;
                 progressBar.style.width = `${progress}%`;
+
+                // Обновляем текст загрузки
+                const textIndex = Math.floor(progress / 20);
+                if (textIndex < loadingTexts.length) {
+                    loadingText.textContent = loadingTexts[textIndex];
+                }
 
                 if (progress >= 100) {
                     clearInterval(interval);
-                    setTimeout(() => {
-                        window.location.href = 'game.html';
-                    }, 500);
+                    fadeOutAndRedirect();
                 }
             }, 50);
+        }
+
+        function fadeOutAndRedirect() {
+            document.body.classList.add('fade-out');
+            setTimeout(() => {
+                window.location.href = 'game.html';
+            }, 1000);
         }
     </script>
 </body>
